@@ -12,8 +12,8 @@
       (let [resp (with-fake-http
                    [{:url "https://api.mailgun.net/v3/sandbox04a729f1bbf64a1891d3cffb7cfdcca3.mailgun.org/messages"
                                    :method :post} "correct url"]
-                   (send-email (EmailRequest. "hjhazarika@gmail.com" "hello world" "testing mailgun server"))
-                   )
+                   (send-email (EmailRequest. "hjhazarika@gmail.com" "hello world" "welcome.html"
+                                 {:name "himangshu" :search "google"})))
             body (:body @resp)]
         (= body "correct url"))))
 
