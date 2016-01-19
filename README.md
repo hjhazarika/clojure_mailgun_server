@@ -1,14 +1,7 @@
 # clojure_mailgun_server
 
-A Clojure library designed to ... well, that part is up to you.
+A Clojure library designed to take in a request over http or queue and send mails
 
 ## Usage
 
-FIXME
-
-## License
-
-Copyright © 2016 FIXME
-
-Distributed under the Eclipse Public License either version 1.0 or (at
-your option) any later version.
+lein ring server-headless
