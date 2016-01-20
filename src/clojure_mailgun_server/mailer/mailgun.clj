@@ -8,13 +8,14 @@
             [clojure-mailgun-server.mailer.selmer :as parser]))
 
 
+(def mode (atom "prod"))
 (defrecord EmailRequest [to subject template value-map])
 
 (defn send-email "takes an email request and makes a get call to mailgun server, returns null for invalid request"
   [^EmailRequest request]
   (if (instance? EmailRequest request)
-    (timbre/info "Processing email request  " request)
-    (let [content (parser/generate-content (:template request) (:value-map request)) ]
+    (let [ _ (timbre/info "Processing email request  " request)
+           content (parser/generate-content (:template request) (:value-map request)) ]
       (timbre/debug "Hitting mailgun  " request)
       (http/post "https://api.mailgun.net/v3/sandbox04a729f1bbf64a1891d3cffb7cfdcca3.mailgun.org/messages"
         {:user-agent "hjh-clojure-client"
@@ -24,6 +25,7 @@
                        "text" content }
          :basic-auth ["api" "key-d01395648c72b4f4affc5361421245c1"]}
         (fn [{:keys [status headers body error opts]}] ;;callback function to persist status in db other approaches include using a redis or message queue
+          (if (= @mode "prod")
              (let [body# (json/parse-string body)
              body# (walk/keywordize-keys body#)
              id (:id body#)
@@ -31,7 +33,7 @@
           (mailer-audit/insert-data {:to (:to request)
                                      :subject (:subject request)
                                      :content content
-                                     :resp_id id#})))
+                                     :resp_id id#})) body))
           ))
     (timbre/error "Invalid request " request)))
 
