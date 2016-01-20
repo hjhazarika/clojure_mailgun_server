@@ -5,6 +5,7 @@
             [langohr.consumers :as lc]
             [clojure-mailgun-server.mailer.mailgun :as mailgun]
             [cheshire.core :as json]
+            [taoensso.timbre :as timbre]
             [clojure.walk :as walk]
             [clojure.java.io :as io]
             [langohr.basic :as lb])
@@ -19,7 +20,8 @@
         msg# (walk/keywordize-keys msg)
         email-request (EmailRequest. (:to msg#) (:subject msg#) (:template msg#) (:values msg#))]
     (timbre/info "[Processing email for Subject through MQ" (:subject email-request) " to " (:to email-request)
-    (mailgun/send-email email-request)))
+    (mailgun/send-email email-request))))
+
 (defn -main
   [& args]
   (let [conn (rmq/connect)
@@ -27,4 +29,4 @@
         qname "clojure-mailgun-server.message-queue"]
     (println (format "[main] subscriber Connected. Channel id: %d" (.getChannelNumber ch)))
     (lq/declare ch qname {:exclusive false :auto-delete true})
-    (lc/subscribe ch qname message-handler {:auto-ack true}))))
+    (lc/subscribe ch qname message-handler {:auto-ack true})))
