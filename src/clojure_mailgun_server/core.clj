@@ -8,6 +8,7 @@
             [buddy.auth.http :as http]
             [buddy.core.codecs :refer [base64->str]]
             [cuerdas.core :as str]
+            [taoensso.timbre :as timbre]
             [liberator.representation :refer [ring-response]])
   (:import [clojure_mailgun_server.mailer.mailgun EmailRequest]))
 
@@ -23,6 +24,7 @@
                   (second)
                   (base64->str))]
     (when-let [[username password] (str/split decoded #":" 2)]
+      (timbre/info "Received http request from " username  )
       {:username username :password password})))
 
 
@@ -53,8 +55,9 @@
                  body# (slurp body)
                  val-map (json/parse-string body#)
                  val-map# (clojure.walk/keywordize-keys val-map)
-                 email-reqeust (EmailRequest. to subject template val-map#)]
-             (mailgun/send-email email-reqeust)))
+                 email-request (EmailRequest. to subject template val-map#)]
+             (timbre/info "[Processing email for Subject " (:subject email-request) " to " (:to email-request)  )
+             (mailgun/send-email email-request)))
   :handle-unprocessable-entity (fn [_]
                                  (ring-response {:body (json/generate-string "cannot process ! Template does not exist in repo")}) )
   :handle-created  (fn [_]

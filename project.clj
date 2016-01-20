@@ -12,5 +12,7 @@
                  [com.novemberain/langohr "3.5.0"]
                  [http-kit.fake "0.2.1"]
                  [http-kit "2.1.18"]
+                 [com.novemberain/monger "3.0.2"]
+                 [com.taoensso/timbre "4.2.1"]
                  [ring/ring-core "1.4.0"]]
   :main clojure-mailgun-server.message-queue.subscriber)
