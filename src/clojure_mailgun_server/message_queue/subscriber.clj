@@ -18,6 +18,7 @@
   (let [msg (json/parse-stream (io/reader payload))
         msg# (walk/keywordize-keys msg)
         email-request (EmailRequest. (:to msg#) (:subject msg#) (:template msg#) (:values msg#))]
+    (timbre/info "[Processing email for Subject through MQ" (:subject email-request) " to " (:to email-request)
     (mailgun/send-email email-request)))
 (defn -main
   [& args]
