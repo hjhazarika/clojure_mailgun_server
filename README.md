@@ -17,3 +17,9 @@ lein run -m clojure-mailgun-server.message-queue.publisher //run message queue p
  
 lein trampoline run //run message queue subscriber
 
+## Prerequisites
+need to install rabbitmq
+need to install mongodb
+
+
+
