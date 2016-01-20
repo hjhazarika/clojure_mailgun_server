@@ -3,6 +3,7 @@
             [cheshire.core :as json]
             [clojure.walk :as walk]
             [clojure.string :as string]
+            [taoensso.timbre :as timbre]
             [clojure-mailgun-server.db.mailer-audit :as mailer-audit]
             [clojure-mailgun-server.mailer.selmer :as parser]))
 
@@ -12,7 +13,9 @@
 (defn send-email "takes an email request and makes a get call to mailgun server, returns null for invalid request"
   [^EmailRequest request]
   (if (instance? EmailRequest request)
+    (timbre/info "Processing email request  " request)
     (let [content (parser/generate-content (:template request) (:value-map request)) ]
+      (timbre/debug "Hitting mailgun  " request)
       (http/post "https://api.mailgun.net/v3/sandbox04a729f1bbf64a1891d3cffb7cfdcca3.mailgun.org/messages"
         {:user-agent "hjh-clojure-client"
          :form-params {"from" "Mailgun testing himangshu <postmaster@sandbox04a729f1bbf64a1891d3cffb7cfdcca3.mailgun.org>"
@@ -29,7 +32,8 @@
                                      :subject (:subject request)
                                      :content content
                                      :resp_id id#})))
-          ))))
+          ))
+    (timbre/error "Invalid request " request)))
 
 (defn -main []
   (println @(send-email (EmailRequest. "hjhazarika@gmail.com" "hello world" "welcome.html" {:name "himangshu" :search "google"}))))
