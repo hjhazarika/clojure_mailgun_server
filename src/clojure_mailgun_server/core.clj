@@ -27,16 +27,20 @@
 
 
 
-;;choice was between fullfledged immutant or basic compojure and liberator,
-;; liberator has most of the possible workflows for any webservice inbuilt and hence picked it up
-;; to /subject and template were made path params as they make for better debugging and also easy rejection of requestions
-;; without processing the entire request body
-;; hashmap for the template was put in request body as this is something that might increase in size later
 
 
 (defn authorized? [ctx]
   (let [{username :username password :password} (parse-httpbasic-header (:request ctx))]
     (and (= username "admin") (= password "admin") )))
+
+
+
+
+;;choice was between fullfledged immutant or basic compojure and liberator,
+;; liberator has most of the possible workflows for any webservice inbuilt and hence picked it up
+;; to /subject and template were made path params as they make for better debugging and also easy rejection of requestions
+;; without processing the entire request body
+;; hashmap for the template was put in request body as this is something that might increase in size later
 
 (defresource email [to subject template]
   :available-media-types ["application/json"]

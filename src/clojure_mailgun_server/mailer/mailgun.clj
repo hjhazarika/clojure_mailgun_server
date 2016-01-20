@@ -17,4 +17,4 @@
        :basic-auth ["api" "key-d01395648c72b4f4affc5361421245c1"]})))
 
 (defn -main []
-  (println @(send-email (EmailRequest. "hjhazarika@gmail.com" "hello world"  "welcome" {:name "himangshu" :search "google"} ))))
+  (println @(send-email (EmailRequest. "hjhazarika@gmail.com" "hello world"  "welcome.html" {:name "himangshu" :search "google"} ))))
