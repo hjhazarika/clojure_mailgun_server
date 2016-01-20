@@ -27,4 +27,4 @@
         qname "clojure-mailgun-server.message-queue"]
     (println (format "[main] subscriber Connected. Channel id: %d" (.getChannelNumber ch)))
     (lq/declare ch qname {:exclusive false :auto-delete true})
-    (lc/subscribe ch qname message-handler {:auto-ack true})))
+    (lc/subscribe ch qname message-handler {:auto-ack true}))))
